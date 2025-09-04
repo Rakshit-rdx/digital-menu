@@ -52,27 +52,29 @@ const PaymentScreen: React.FC<PaymentScreenProps> = ({ isOpen, onClose, onPaymen
 
         // Fallback: If the app doesn't open after a delay, show the QR code again.
         setTimeout(() => {
-          // Check if the tab is still active. If so, the deep link likely failed.
           if (!document.hidden) {
             setIsFlipped(false);
           }
-        }, 2500); // Wait 2.5 seconds before checking
+        }, 2500);
         return; // Exit here since navigation and timeout are handled.
 
       case 'Google Pay':
+        appUrl = `tez://upi/pay?${queryString}`;
+        break;
+
       case 'PhonePe':
-        appUrl = `upi://pay?${queryString}`;
+        appUrl = `phonepe://upi/pay?${queryString}`;
         break;
 
       default:
-        // Generic UPI for any other case or future additions
         appUrl = `upi://pay?${queryString}`;
         break;
     }
+
     window.location.href = appUrl;
   };
 
-  // FIX: Explicitly type variants with `Variants` to fix type inference issue where string literals for 'ease' were not being correctly typed.
+  // FIX: Explicitly type variants with `Variants`
   const checkCircleVariants: Variants = {
     hidden: { pathLength: 0, opacity: 0 },
     visible: {
